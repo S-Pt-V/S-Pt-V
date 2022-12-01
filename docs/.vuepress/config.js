@@ -48,7 +48,12 @@ module.exports = {
           ["/oracle/oracle", "Oracle"],
           ["/oracle/structure", "Oracle体系架构"],
           ["/oracle/directory", "Oracle目录结构"],
-          ["/oracle/connect", "Oracle连接方式"]
+          ["/oracle/connect", "Oracle连接方式"],
+          ["/oracle/instance", "Oracle实例"],
+          ["/oracle/sid", "Oracle SID"],
+          ["/oracle/checkpoint", "Oracle检查点"],
+          ["/oracle/instancerecovery", "Oracle实例恢复"],
+          ["/oracle/open&close", "Oracle启动和关闭"]
         ]
       },
       {
