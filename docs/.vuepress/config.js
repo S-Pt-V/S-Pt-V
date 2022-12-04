@@ -9,7 +9,7 @@ module.exports = {
       {
         title: "虚拟化",
         path: "/virtualize/",
-        collapsable: false,
+        collapsable: true,
         children: [
           ["/virtualize/interface", "虚拟网卡"],
           ["/virtualize/yum", "yum换源"],
@@ -21,7 +21,7 @@ module.exports = {
       {
         title: "计算机网络",
         path: "/network/",
-        collapsable: false,
+        collapsable: true,
         children: [
           ["/network/osi", "OSI模型"],
           ["/network/Internet", "互联网"],
@@ -33,7 +33,7 @@ module.exports = {
       {
         title: "Sangfor",
         path: "/sangfor/",
-        collapsable: false,
+        collapsable: true,
         children: [
           ["/sangfor/vpn", "VPN"],
           ["/sangfor/ac", "AC"],
@@ -43,7 +43,7 @@ module.exports = {
       {
         title: "Oracle",
         path: "/oracle/",
-        collapsable: false,
+        collapsable: true,
         children: [
           ["/oracle/oracle", "Oracle"],
           ["/oracle/structure", "Oracle体系架构"],
@@ -60,7 +60,7 @@ module.exports = {
       {
         title: "嵌入式",
         path: "/embeded/",
-        collapsable: false,
+        collapsable: true,
         children: [
           ["/embeded/stm32", "stm32"]
         ]
@@ -68,7 +68,7 @@ module.exports = {
       {
         title: "机器学习",
         path: "/machinelearning/",
-        collapsable: false,
+        collapsable: true,
         children: [
           ["/machinelearning/kNN", "k-邻近算法"],
           ["/machinelearning/decisiontree", "决策树"],
@@ -77,7 +77,7 @@ module.exports = {
       {
         title: "计算机视觉与深度学习",
         path: "/cv&dl/",
-        collapsable: false,
+        collapsable: true,
         children: [
           ["/cv&dl/imagclassify", "图像分类"],
           ["/cv&dl/linear", "线性分类器"],
@@ -90,12 +90,12 @@ module.exports = {
       {
         title: "vue",
         path: "/vue/",
-        collapsable: false,
+        collapsable: true,
       },
       {
         title: "数据库系统开发",
         path: "/db_demo/",
-        collapsable: false,
+        collapsable: true,
         children: [
           ["/db_demo/database", "数据库配置"],
           ["/db_demo/dotnetcore", "Asp.net core 项目开发"],
@@ -105,7 +105,7 @@ module.exports = {
       {
         title: "Python",
         path: "/python/",
-        collapsable: false,
+        collapsable: true,
         children: [
           ["/python/crawl", "爬虫"]
         ]
