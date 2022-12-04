@@ -244,7 +244,7 @@ epoch：1个epoch表示训练过了1遍训练集中的所有样本。</br>
 去相关和白化通常应用在SVM以及一些其他传统机器学习方法中，神经网络中一般不常用，更多用的去均值和归一化。
 ![](./assets/2021-12-31-09-19-11.png)
 
-# 一些资料
+## 一些资料
 
 斯坦福线性分类器的一个例子<br />
 http://vision.stanford.edu/teaching/cs231n-demos/linear-classify/
