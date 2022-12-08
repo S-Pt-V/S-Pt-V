@@ -31,6 +31,14 @@ module.exports = {
         ]
       },
       {
+        title: "CCNA",
+        path: "/CCNA/",
+        collapsable: true,
+        children: [
+          ["/CCNA/network", "计算机网络基础"]
+        ]
+      },
+      {
         title: "Sangfor",
         path: "/sangfor/",
         collapsable: true,
