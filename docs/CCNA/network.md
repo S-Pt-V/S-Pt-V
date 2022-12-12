@@ -58,13 +58,6 @@ PDU到达传输层后，完整数据分为若干段，每一段加上一个**头
     </tr>
     <tr>
         <td colspan="4" align="center">头部长度</td>
-        <!-- <td colspan="6" align="center">保留</td>
-        <td colspan="1" align="center">URG</td>
-        <td colspan="1" align="center">ACK</td>
-        <td colspan="1" align="center">PSH</td>
-        <td colspan="1" align="center">RST</td>
-        <td colspan="1" align="center">SYN</td>
-        <td colspan="1" align="center">FIN</td> -->
         <td colspan="6" align="center">控制字段</td>
         <td colspan="4" align="center">数据偏移</td>
         <td colspan="16" align="center">窗口</td>
@@ -128,3 +121,6 @@ PDU(应用层表示层会话层)->数据段(传输层)->数据包(网络层)->�
 封装和解封装过程只涉及三层设备，例如防火墙，路由器，和三层交换机。二层设备，例如二层交换机，只解析到数据链路层。
 * 三层设备根据路由表转发。
 * 二层设备根据MAC地址表转发。
+
+## 各层协议
+![](./assets/2022-12-12-14-40-27.png)

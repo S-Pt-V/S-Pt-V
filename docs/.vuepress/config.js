@@ -35,7 +35,9 @@ module.exports = {
         path: "/CCNA/",
         collapsable: true,
         children: [
-          ["/CCNA/network", "计算机网络基础"]
+          ["/CCNA/network", "计算机网络基础"],
+          ["/CCNA/ciscocmd", "思科基础命令"],
+          ["/CCNA/arp", "ARP协议"]
         ]
       },
       {
