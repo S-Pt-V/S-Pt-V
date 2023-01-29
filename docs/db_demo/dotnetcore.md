@@ -190,7 +190,7 @@ Serilog.Sinks.File</br>
 ```
 
 在Program.cs中添加如下代码，注册Serilog服务
-```C#
+```csharp
 #region Serilog
 builder.Host.UseSerilog((context, logger) =>
 {
@@ -394,7 +394,7 @@ builder.Services.AddDbContext<qhctecContext>();
 以PersonnelController为例展示web api的创建
 
 PersonnelController.cs的原始代码为：
-```C#
+```csharp
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -410,7 +410,7 @@ namespace qhctec.Controllers
 ```
 
 修改如下，简单添加几个API
-```C#
+```csharp
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using qhctec.Models;
