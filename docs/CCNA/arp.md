@@ -19,7 +19,7 @@ PC1要访问PC3，在应用层产生数据，到达传输层加上源目端口�
 
 ![](./assets/2022-12-12-16-17-30.png)
 
-在第一次访问时，PC1不知道PC3的源MAC，会暂缓发送数据包，发送一个广播arp请求，源IP和源MAC地址为PC1的IP和MAC，目的IP为PC3IP地址，目的IP地址为全0。
+在第一次访问时，PC1不知道PC3的源MAC，会暂缓发送数据包，发送一个广播arp请求，源IP和源MAC地址为PC1的IP和MAC，目的IP为PC3IP地址，目的MAC地址为全0。
 * 发送arp request包，目的MAC地址为全0，源MAC为PC_1的MAC地址。
 * 封装arp包之后，在数据链路层封装帧头部，帧头部也会有目的和源mac。此时为广播形式，目的mac为全F，源mac为自己的mac地址。
 * 数据链路层为广播地址，PC2和PC3都接收数据帧。PC3在收到数据包后会学习PC1的IP地址和MAC地址，同时单播向PC1回复arp relpy，包含自己的MAC地址。

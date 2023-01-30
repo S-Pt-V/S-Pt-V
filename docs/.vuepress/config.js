@@ -46,9 +46,9 @@ module.exports = {
         path: "/sangfor/",
         collapsable: true,
         children: [
-          ["/sangfor/vpn", "VPN"],
+          ["/sangfor/firewall","AF"],
           ["/sangfor/ac", "AC"],
-          ["/sangfor/firewall","AF"]
+          ["/sangfor/vpn", "VPN"]
         ]
       },
       {
