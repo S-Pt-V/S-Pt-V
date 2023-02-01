@@ -1,6 +1,6 @@
 # ARP协议
 
-通过ARP协议可以将网络地址映射为mac地址。
+Address Resolution Protocol，已知IP地址，解析MAC地址。通过ARP协议可以将网络地址映射为mac地址。
 
 32位的ip地址位于网络层封装在ip头部中，48位mac地址位于数据链路层。
 
