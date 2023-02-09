@@ -232,7 +232,7 @@ Scaffold-DbContext "server=192.168.48.110;userid=qhctec;pwd=qhctec@2022;port=330
 ```
 ![](./assets/2022-06-27-09-24-28.png)
 
-执行后生成的项目结构：
+执行后生成的项目结构：<br />
 ![](./assets/2022-06-27-09-25-21.png)
 
 Account.cs、Personnel.cs、qhctecContext.cs均为生成的文件
