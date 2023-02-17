@@ -201,12 +201,13 @@ builder.Host.UseSerilog((context, logger) =>
 ```
 
 在控制器中注册Serilog
-```C#
+```csharp
+// ContrrlloerName是当前的控制器名称
 private readonly ILogger<ControllerName> _logger;
-    public ControllerName(ILogger<ControllerName> logger)
-    {
-        _logger = logger;
-    }
+public ControllerName(ILogger<ControllerName> logger)
+{
+    _logger = logger;
+}
 ```
 
 ## 连接数据库
@@ -530,6 +531,10 @@ namespace qhctec.Controllers
 ```
 
 ## Swagger页面
+
+安装Swashbuckle.Asp.NetCore
+
+在Program.cs中添加代码
 ```csharp
 builder.Services.AddSwaggerGen(options =>
 {
