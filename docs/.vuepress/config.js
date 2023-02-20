@@ -40,7 +40,8 @@ module.exports = {
           ["/CCNA/arp", "ARP协议"],
           ["/CCNA/static_route", "静态路由协议"],
           ["/CCNA/RIP", "RIP"],
-          ["/CCNA/OSPF", "OSPF"]
+          ["/CCNA/OSPF", "OSPF"],
+          ["/CCNA/EIGRP", "EIGRP"]
         ]
       },
       {
