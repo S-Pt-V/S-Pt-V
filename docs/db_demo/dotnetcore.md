@@ -201,12 +201,13 @@ builder.Host.UseSerilog((context, logger) =>
 ```
 
 在控制器中注册Serilog
-```C#
+```csharp
+// ContrrlloerName是当前的控制器名称
 private readonly ILogger<ControllerName> _logger;
-    public ControllerName(ILogger<ControllerName> logger)
-    {
-        _logger = logger;
-    }
+public ControllerName(ILogger<ControllerName> logger)
+{
+    _logger = logger;
+}
 ```
 
 ## 连接数据库
@@ -232,7 +233,7 @@ Scaffold-DbContext "server=192.168.48.110;userid=qhctec;pwd=qhctec@2022;port=330
 ```
 ![](./assets/2022-06-27-09-24-28.png)
 
-执行后生成的项目结构：
+执行后生成的项目结构：<br />
 ![](./assets/2022-06-27-09-25-21.png)
 
 Account.cs、Personnel.cs、qhctecContext.cs均为生成的文件
@@ -530,6 +531,10 @@ namespace qhctec.Controllers
 ```
 
 ## Swagger页面
+
+安装Swashbuckle.Asp.NetCore
+
+在Program.cs中添加代码
 ```csharp
 builder.Services.AddSwaggerGen(options =>
 {
