@@ -38,10 +38,14 @@ module.exports = {
           ["/CCNA/network", "计算机网络基础"],
           ["/CCNA/ciscocmd", "思科基础命令"],
           ["/CCNA/arp", "ARP协议"],
+<<<<<<< HEAD
+          ["/CCNA/ip", "IP子网划分"]
+=======
           ["/CCNA/static_route", "静态路由协议"],
           ["/CCNA/RIP", "RIP"],
           ["/CCNA/OSPF", "OSPF"],
           ["/CCNA/EIGRP", "EIGRP"]
+>>>>>>> 618ca63975de1aad0ab20aad46e160c30342682b
         ]
       },
       {
