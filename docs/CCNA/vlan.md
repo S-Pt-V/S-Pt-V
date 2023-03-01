@@ -14,6 +14,8 @@
 
 交换机上分三个vlan（颜色）。每个逻辑vlan就像一个独立的物理桥，交换机上的每一个端口都可以分给不同的vlan。默认情况下每个端口都属于vlan1(公有)。
 
+access一般接终端或者主机。
+
 ## trunk
 
 VLAN干道：对于多个vlan交换机来说，vlan干道就是两个交换机之间的连接，它在两个或两个以上的VLAN之间传输通信。每个交换机必须确定它收到的帧属于哪个VLAN。
@@ -32,12 +34,37 @@ vlan可以跨越多台交换机，trunk可以承载多个vlan的数据，trunk�
 
 ISL在原有数据之前加封装，802.1Q只在以太网头部加一个vlan标记。
  
- ## vlan号
+802.1q中有本征vlan。本征vlan的数据经过trunk口不会打标记。对端trunk口接收到没有打标记的数据，会把收到的数据包放进自己的本征vlan中。中间链路本征vlan不匹配的话，两边通讯的vlan会不匹配。
 
- 交换机默认所有接口都属于vlan1。
+## vlan号
 
- 交换机支持创建4096个vlan，0~4095，0和4095不能用，真正的编号是1~4094。
+交换机默认所有接口都属于vlan1。
 
- vlan1,vlan1002,vlan1003,vlan1004,vlan1005交换机初始就有，不能被删除， vlan1能使用，其余四个保留。
+交换机支持创建4096个vlan，0~4095，0和4095不能用，真正的编号是1~4094。
 
- 1~1001是标准vlan。1006~4094是扩展vlan。cisco 3560以上的型号才支持，vtp协议的transparent模式可用。
+vlan1,vlan1002,vlan1003,vlan1004,vlan1005交换机初始就有，不能被删除， vlan1能使用，其余四个保留。
+
+1~1001是标准vlan。1006~4094是扩展vlan。cisco 3560以上的型号才支持，vtp协议的transparent模式可用。
+
+## cisco命令
+
+```sh
+# 查看vlan表
+show vlan brief
+# 特权模式下进入vlan database
+vlan database
+# 创建vlan10
+vlan 10
+# 退出使用exit，使配置生效并保存
+exit
+vlan 10 name [该vlan的名字]
+# 进入全局配置
+config terminal
+# 创vlan20
+vlan20
+name [该vlan的名字]
+# 进入接口将接口划分到vlan
+int f0/1
+switch port mode access
+port default vlan10
+```
