@@ -4,19 +4,24 @@
 
 ## 项目创建
 
-在visual studio中创建ASP.NET Core Web API项目。
-![](./assets/2022-06-27-08-57-11.png)
-![](./assets/2022-06-27-08-58-13.png)
-![](./assets/2022-06-27-08-58-23.png)
+在visual studio中创建**ASP.NET Core Web API**项目。
+
+![创建新项目](./assets/2022-06-27-08-57-11.png)
+
+![配置新项目](./assets/2022-06-27-08-58-13.png)
+
+![其他信息](./assets/2022-06-27-08-58-23.png)
 
 程序入口为Program.cs，其中的代码是对项目服务等的配置。
-![](./assets/2022-06-27-09-00-21.png)
+![program.cs](./assets/2022-06-27-09-00-21.png)
 
 项目中默认包含一个WeatherForecast的类及其控制器。
-![](./assets/2022-06-27-09-01-30.png)
+<div align=center>![directory](./assets/2022-06-27-09-01-30.png)</div>
 
 ## 跨域配置
+
 在Program.cs中添加如下代码
+
 ```csharp
 builder.Services.AddCors(options =>
 {
@@ -37,7 +42,7 @@ app.UseCors("Cors");
 
 ## Token认证
 
-参考博客地址：https://blog.csdn.net/weixin_44442366/article/details/124017306
+参考博客地址：<https://blog.csdn.net/weixin_44442366/article/details/124017306>
 
 项目中使用jwt bearer token来标识前端用户身份，以及权限设置
 
@@ -46,6 +51,7 @@ app.UseCors("Cors");
 ![](./assets/2022-07-28-16-14-51.png)
 
 在appsettings.json中添加Jwt需要的认证，包括认证密钥、发布者、接收者等
+
 ```json
 "Authentication": {
     "key": "",              // 满足一定长度要求的字符串，长度不够会报错
@@ -63,6 +69,7 @@ Jwt的三部分：</br>
 &ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;使用编码后的header和payload
 
 Jwt在登录成功后生成：
+
 ```csharp
 private readonly IConfiguration _configuration;
 public AccountController(IConfiguration configuration)
@@ -103,12 +110,14 @@ public ActionResult Login()
 ```
 
 取出用户信息：
+
 ```csharp
 // "user_id"为键名
 var id = HttpContext.User.Claims.First(c => c.Type == "user_id");
 ```
 
 在Program.cs注入Jwt认证服务
+
 ```csharp
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
@@ -129,8 +138,6 @@ app.UseAuthentication();
 app.UseAuthorization();
 ```
 
-
-
 ## 日志框架
 
 使用Serilog记录应用运行过程中的日志。在项目中安装以下nuget包：</br>
@@ -147,6 +154,7 @@ Serilog.Sinks.File</br>
 修改项目的appsettings.json
 
 ![](./assets/2022-07-25-12-44-15.png)
+
 ```json
 {
   "Logging": {
@@ -176,7 +184,7 @@ Serilog.Sinks.File</br>
               "Name": "File", //输出文件
               "Args": {
                 "path": "log/log.txt",
-                "outputTemplate": "{NewLine}Date:{Timestamp:yyyy-MM-dd HH:mm:ss.fff}{NewLine}LogLevel:{Level}{NewLine}Message:{Message}{NewLine}Exception:{Exception}{NewLine}---------------------------------------------------------------------------------------------------------",
+                "outputTemplate": "{NewLine}Date:{Timestamp:yyyy-MM-dd HH:mm:ss.fff} Exception:{Exception}{NewLine}[{Level}]: {Message}",
                 "rollingInterval": "3" //按天记录
               }
             }
@@ -190,7 +198,10 @@ Serilog.Sinks.File</br>
 ```
 
 在Program.cs中添加如下代码，注册Serilog服务
+
 ```csharp
+using Serilog;
+
 #region Serilog
 builder.Host.UseSerilog((context, logger) =>
 {
@@ -201,6 +212,7 @@ builder.Host.UseSerilog((context, logger) =>
 ```
 
 在控制器中注册Serilog
+
 ```csharp
 // ContrrlloerName是当前的控制器名称
 private readonly ILogger<ControllerName> _logger;
@@ -214,7 +226,8 @@ public ControllerName(ILogger<ControllerName> logger)
 
 ### Mysql
 
-连接Mysql数据库需要安装**Pomelo.EntityFrameworkCore.MySql**和**Microsoft.EntityFrameworkCore.Tools**程序包，在解决方案右键**管理NuGet程序包**，选择第一个，为所选的项目安装。
+连接Mysql数据库需要安装 **Pomelo.EntityFrameworkCore.MySql** 和 **Microsoft.EntityFrameworkCore.Tools** 程序包，在解决方案右键**管理NuGet程序包**，选择第一个，为所选的项目安装。
+
 ![](./assets/2022-06-27-09-06-09.png)
 ![](./assets/2022-06-27-09-18-51.png)
 
@@ -226,11 +239,13 @@ public ControllerName(ILogger<ControllerName> logger)
 :::
 
 在其中输入以下命令连接数据库，并按照数据库的表进行反向工程建立模型
+
 ```sh
 Scaffold-DbContext "server=[服务器地址];userid=[用户名];pwd=[用户密码];port=[数据库端口(3306)];database=[数据库名];sslmode=none;" Pomelo.EntityFrameworkCore.MySql -OutputDir Models -Force
 
-Scaffold-DbContext "server=192.168.48.110;userid=qhctec;pwd=qhctec@2022;port=3306;database=qhctec;sslmode=none;" Pomelo.EntityFrameworkCore.MySql -OutputDir Models -Force
+Scaffold-DbContext "server=192.168.51.250;userid=qhctec;pwd=QHCTEC@2023;port=3306;database=qhctec;sslmode=none;" Pomelo.EntityFrameworkCore.MySql -OutputDir Models -Force
 ```
+
 ![](./assets/2022-06-27-09-24-28.png)
 
 执行后生成的项目结构：<br />
@@ -239,6 +254,7 @@ Scaffold-DbContext "server=192.168.48.110;userid=qhctec;pwd=qhctec@2022;port=330
 Account.cs、Personnel.cs、qhctecContext.cs均为生成的文件
 
 Account.cs为根据数据库qhctec中account表生成的类
+
 ```csharp
 using System;
 using System.Collections.Generic;
@@ -260,7 +276,9 @@ namespace qhctec.Models
 }
 
 ```
+
 Personnel.cs为根据数据库qhctec中personnel表生成的类
+
 ```csharp
 using System;
 using System.Collections.Generic;
@@ -280,6 +298,7 @@ namespace qhctec.Models
 ```
 
 qhctecContext.cs为数据库上下文
+
 ```csharp
 using System;
 using System.Collections.Generic;
@@ -381,8 +400,8 @@ namespace qhctec.Models
 
 ```
 
-
 之后需要在Program.cs中注册数据库上下文：
+
 ```csharp
 builder.Services.AddDbContext<qhctecContext>();
 ```
@@ -395,6 +414,7 @@ builder.Services.AddDbContext<qhctecContext>();
 以PersonnelController为例展示web api的创建
 
 PersonnelController.cs的原始代码为：
+
 ```csharp
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -411,6 +431,7 @@ namespace qhctec.Controllers
 ```
 
 修改如下，简单添加几个API
+
 ```csharp
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -532,9 +553,12 @@ namespace qhctec.Controllers
 
 ## Swagger页面
 
+https://blog.csdn.net/qq_25086397/article/details/103742575?spm=1001.2101.3001.6650.1&utm_medium=distribute.pc_relevant.none-task-blog-2%7Edefault%7ECTRLIST%7ERate-1-103742575-blog-124109433.pc_relevant_default&depth_1-utm_source=distribute.pc_relevant.none-task-blog-2%7Edefault%7ECTRLIST%7ERate-1-103742575-blog-124109433.pc_relevant_default&utm_relevant_index=2
+
 安装Swashbuckle.Asp.NetCore
 
 在Program.cs中添加代码
+
 ```csharp
 builder.Services.AddSwaggerGen(options =>
 {
