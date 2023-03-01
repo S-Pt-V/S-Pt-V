@@ -37,11 +37,14 @@ module.exports = {
         children: [
           ["/CCNA/network", "计算机网络基础"],
           ["/CCNA/ciscocmd", "思科基础命令"],
+          ["/CCNA/ip", "IP子网划分"],
           ["/CCNA/arp", "ARP协议"],
           ["/CCNA/static_route", "静态路由协议"],
           ["/CCNA/RIP", "RIP"],
           ["/CCNA/OSPF", "OSPF"],
-          ["/CCNA/EIGRP", "EIGRP"]
+          ["/CCNA/EIGRP", "EIGRP"],
+          ["/CCNA/switch", "交换基础原理"],
+          ["/CCNA/vlan", "vlan协议"]
         ]
       },
       {
