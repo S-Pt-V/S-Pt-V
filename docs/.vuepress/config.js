@@ -20,18 +20,6 @@ module.exports = {
         ]
       },
       {
-        title: "虚拟化",
-        path: "/virtualize/",
-        collapsable: true,
-        children: [
-          ["/virtualize/interface", "虚拟网卡"],
-          ["/virtualize/yum", "yum换源"],
-          ["/virtualize/ntp", "ntp服务"],
-          ["/virtualize/dns", "dns服务"],
-          ["/virtualize/kms", "kms服务"],
-        ]
-      },
-      {
         title: "CCNA",
         path: "/CCNA/",
         collapsable: true,
@@ -49,16 +37,6 @@ module.exports = {
         ]
       },
       {
-        title: "Sangfor",
-        path: "/sangfor/",
-        collapsable: true,
-        children: [
-          ["/sangfor/firewall","AF"],
-          ["/sangfor/ac", "AC"],
-          ["/sangfor/vpn", "VPN"]
-        ]
-      },
-      {
         title: "Oracle",
         path: "/oracle/",
         collapsable: true,
@@ -73,6 +51,18 @@ module.exports = {
           ["/oracle/instancerecovery", "Oracle实例恢复"],
           ["/oracle/startup&shutdown", "Oracle启动和关闭"],
           ["/oracle/multitenant", "Oracle多租户环境"]
+        ]
+      },
+      {
+        title: "虚拟化",
+        path: "/virtualize/",
+        collapsable: true,
+        children: [
+          ["/virtualize/interface", "虚拟网卡"],
+          ["/virtualize/yum", "yum换源"],
+          ["/virtualize/ntp", "ntp服务"],
+          ["/virtualize/dns", "dns服务"],
+          ["/virtualize/kms", "kms服务"],
         ]
       },
       {
@@ -126,6 +116,16 @@ module.exports = {
         collapsable: true,
         children: [
           ["/python/crawl", "爬虫"]
+        ]
+      },
+      {
+        title: "Sangfor",
+        path: "/sangfor/",
+        collapsable: true,
+        children: [
+          ["/sangfor/firewall","AF"],
+          ["/sangfor/ac", "AC"],
+          ["/sangfor/vpn", "VPN"]
         ]
       },
     ],
