@@ -243,7 +243,7 @@ public ControllerName(ILogger<ControllerName> logger)
 ```sh
 Scaffold-DbContext "server=[服务器地址];userid=[用户名];pwd=[用户密码];port=[数据库端口(3306)];database=[数据库名];sslmode=none;" Pomelo.EntityFrameworkCore.MySql -OutputDir Models -Force
 
-Scaffold-DbContext "server=192.168.51.250;userid=qhctec;pwd=QHCTEC@2023;port=3306;database=qhctec;sslmode=none;" Pomelo.EntityFrameworkCore.MySql -OutputDir Models -Force
+Scaffold-DbContext "server=192.168.51.250;userid=qhctec;pwd=qhctec@2023;port=3306;database=qhctec;sslmode=none;" Pomelo.EntityFrameworkCore.MySql -OutputDir Models -Force
 ```
 
 ![](./assets/2022-06-27-09-24-28.png)
