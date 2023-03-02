@@ -7,6 +7,19 @@ module.exports = {
     sidebar: [
       ["/", "主页"],
       {
+        title: "计算机网络",
+        path: "/network/",
+        collapsable: true,
+        children: [
+          ["/network/osi", "OSI模型"],
+          ["/network/Internet", "互联网"],
+          ["/network/IP", "IP地址"],
+          ["/network/switch", "交换机"],
+          ["/network/router", "路由器"],
+          ["/network/storage", "存储"],
+        ]
+      },
+      {
         title: "虚拟化",
         path: "/virtualize/",
         collapsable: true,
@@ -16,18 +29,6 @@ module.exports = {
           ["/virtualize/ntp", "ntp服务"],
           ["/virtualize/dns", "dns服务"],
           ["/virtualize/kms", "kms服务"],
-        ]
-      },
-      {
-        title: "计算机网络",
-        path: "/network/",
-        collapsable: true,
-        children: [
-          ["/network/osi", "OSI模型"],
-          ["/network/Internet", "互联网"],
-          ["/network/switch", "交换机"],
-          ["/network/router", "路由器"],
-          ["/network/storage", "存储"],
         ]
       },
       {
