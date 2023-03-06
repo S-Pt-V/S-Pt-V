@@ -7,6 +7,14 @@ module.exports = {
     sidebar: [
       ["/", "主页"],
       {
+        title: "实验室记录",
+        path: "/lab/",
+        collapsable: true,
+        children: [
+          ["/lab/vue", "VUE"]
+        ]
+      },
+      {
         title: "计算机网络",
         path: "/network/",
         collapsable: true,
@@ -35,7 +43,8 @@ module.exports = {
           ["/CCNA/switch", "交换基础原理"],
           ["/CCNA/vlan", "vlan协议"],
           ["/CCNA/vtp", "VTP协议"],
-          ["/CCNA/STP", "生成树"]
+          ["/CCNA/STP", "生成树"],
+          ["/CCNA/acl", "访问控制列表"]
         ]
       },
       {
@@ -96,11 +105,6 @@ module.exports = {
           ["/cv&dl/classic", "经典网络分析"],
           ["/cv&dl/segmentation","图像分割"]
         ]
-      },
-      {
-        title: "vue",
-        path: "/vue/",
-        collapsable: true,
       },
       {
         title: "数据库系统开发",
