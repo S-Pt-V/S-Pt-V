@@ -34,7 +34,8 @@ module.exports = {
           ["/CCNA/EIGRP", "EIGRP"],
           ["/CCNA/switch", "交换基础原理"],
           ["/CCNA/vlan", "vlan协议"],
-          ["/CCNA/vtp", "VTP协议"]
+          ["/CCNA/vtp", "VTP协议"],
+          ["/CCNA/STP", "生成树"]
         ]
       },
       {

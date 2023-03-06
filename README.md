@@ -6,8 +6,9 @@
 报出以下错误
 error:03000086:digital envelope routines::initialization error
 
-解决方法：
+::: tip 解决方法
 执行如下命令后再运行其他命令。
 ```shell
 $env:NODE_OPTIONS="--openssl-legacy-provider"
 ```
+:::
