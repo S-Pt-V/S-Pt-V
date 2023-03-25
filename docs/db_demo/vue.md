@@ -14,6 +14,10 @@ vue create qhctec_ui
 这一步操作会创建一个名为qhctec_ui的文件夹，该文件夹中的文件就是前端项目需要用到的文件。
 ![](./assets/2022-06-27-11-45-27.png)
 
+::: TIP 报multi-word错误
+在 vue.config.js 中添加 lintOnSave: false
+:::
+
 ## 向项目中添加vuetify
 vuetify官网，按照其步骤安装即可：
 https://vuetifyjs.com/zh-Hans/getting-started/installation/
@@ -166,3 +170,154 @@ export default router;
 ```
 
 ## 连接后端API
+
+### Axios
+
+对接后端使用的是axios，具体的东西还得有空仔细研究，但是多次项目经验验验证了如下可行的写法：
+
+在 /src/plugins 中新建的axios.js。其中主要作用是：
+1. 请求拦截器，检测本地如果存在之前获取的token，则拦截请求，将本地token以后端格式嵌入请求头中。**需要提前在store中定义好对应的存储对象**，否则请求发不出去，会报错。
+2. 响应拦截器，从响应中把返回信息解析出来（我猜是这样）
+3. 重写了各个请求，如get、post、upload和download等，用于重新定义api
+
+::: WARNING
+注意，请求要与后端的输入匹配。例如在后端api入参为两个字符串时，正确的post请求是把参数带在url中。而按照之前重写的方式，请求参数是在载荷中的，这样请求会失败。当把后端入参修改为对象时，就可以正确响应。
+:::
+
+```js
+//封装axios
+import axios from "axios";
+import store from "../store";
+import setting from "../settings"
+
+axios.defaults.timeout = 5000;
+axios.defaults.baseURL = setting.apiurl
+axios.defaults.headers.post["Content-Type"] = "application/json,charset=UTF-8";
+axios.defaults.headers.get["Content-Type"] = "application/json";
+
+// 请求拦截器
+axios.interceptors.request.use(
+  config => {
+    if (store.state.user.token) {
+      config.headers.Authorization = "Bearer " + store.state.user.token;
+    }
+    return config;
+  },
+  error => {
+    return Promise.reject(error);
+  }
+);
+//响应拦截器
+axios.interceptors.response.use(
+  response => {
+    //console.log("response");
+    return response;
+  },
+  error => {
+    return Promise.reject(error);
+  }
+);
+function get(url, params = {}) {
+  return new Promise((resolve, reject) => {
+    axios
+      .get(url, {
+        params: params
+      })
+      .then(response => {
+        resolve(response.data);
+      })
+      .catch(err => {
+        reject(err);
+      });
+  });
+}
+function post(url, data = {}) {
+  return new Promise((resolve, reject) => {
+    axios.post(url, data).then(
+      response => {
+        resolve(response.data);
+      },
+      err => {
+        reject(err);
+      }
+    );
+  });
+}
+function upload(url, data = {}) {
+  var instance = axios.create({
+    baseURL: defaultsettings.apiurl,
+    timeout: 500000,
+    headers: {
+      "Content-Type": "multipart/form-data",
+      Authorization: "Bearer " + store.state.user.token
+    }
+  });
+  return instance.post(url, data);
+}
+
+function download(url, data = {}) {
+  return new Promise((resolve, reject) => {
+    axios.post(url, data, { responseType: "blob" }).then(
+      response => {
+        resolve(response.data);
+      },
+      err => {
+        reject(err);
+      }
+    );
+  });
+}
+
+export { get, post, upload, download };
+export default {
+  install: function(Vue) {
+    Vue.prototype.$get = get;
+    Vue.prototype.$post = post;
+  }
+};
+
+```
+
+### api接口定义
+
+从axios中引入重写后的get和post，再加上后端接口的url。
+
+```js
+import { get, post } from "@/plugins/axios";
+
+export function api_account_login(data) {
+    return post("/api/Account/Login", data);
+}
+
+```
+
+### 调用
+
+在页面对应位置调用
+
+```js
+<script>
+import { api_account_login } from "@/api";
+export default ({
+    name: "LoginCard",
+    data: () => ({
+        username: "S_Pt_V",
+        password: "159753",
+    }),
+    mounted() {},
+    computed: {},
+    methods: {
+        login() {
+            console.log(this.username);
+            console.log(this.password);
+            api_account_login({
+                UserName: this.username,
+                Password: this.password
+            }).then(res => {
+                console.log(res);
+            })
+        }
+    }
+})
+</script>
+```
