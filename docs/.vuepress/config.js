@@ -60,7 +60,6 @@ module.exports = {
         path: "/oracle/",
         collapsable: true,
         children: [
-          ["/oracle/oracle", "Oracle"],
           ["/oracle/structure", "Oracle体系架构"],
           ["/oracle/directory", "Oracle目录结构"],
           ["/oracle/connect", "Oracle连接方式"],
