@@ -48,6 +48,14 @@ module.exports = {
         ]
       },
       {
+        title: "CCNP",
+        path: "/CCNP/",
+        collapsable: true,
+        children: [
+          ["/CCNP/static_route", "静态路由"]
+        ]
+      },
+      {
         title: "Oracle",
         path: "/oracle/",
         collapsable: true,
