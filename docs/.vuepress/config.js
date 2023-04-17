@@ -60,6 +60,8 @@ module.exports = {
         path: "/oracle/",
         collapsable: true,
         children: [
+          // OCP课程day1~day2
+          ["/oracle/installation", "Oracle软件安装"],
           ["/oracle/structure", "Oracle体系架构"],
           ["/oracle/directory", "Oracle目录结构"],
           ["/oracle/connect", "Oracle连接方式"],
