@@ -1,17 +1,26 @@
 # Oracle目录结构
 
 ## /u01
-安装软件的根为 /u01
+
+安装软件的根为 /u01，其下只有app文件夹。
+
 ![](./assets/2022-12-01-10-45-47.png)
+
+app文件夹下有oracle文件夹和oraInventory。
 
 ![](./assets/2022-12-01-10-47-11.png)
 
-## /u01/app
-oraInventory存放安装过程中的信息，有oracle创建
+### /u01/app
+
+oraInventory存放安装过程中的信息，由oracle创建。
+
 ![](./assets/2022-12-01-10-48-41.png)
 
 oracle为oracle的base目录，设置在环境变量中
+
 ![](./assets/2022-12-01-10-49-28.png)
+
+环境变量ORACLE_HOME。
 
 ![](./assets/2022-12-01-10-51-41.png)
 

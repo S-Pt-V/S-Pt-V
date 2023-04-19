@@ -61,8 +61,10 @@ module.exports = {
         collapsable: true,
         children: [
           // OCP课程day1~day2
-          ["/oracle/installation", "Oracle软件安装"],
           ["/oracle/structure", "Oracle体系架构"],
+          ["/oracle/installation", "Oracle软件安装"],
+          ["/oracle/dbcreate", "创建数据库"],
+          ["/oracle/listener", "创建监听"],
           ["/oracle/directory", "Oracle目录结构"],
           ["/oracle/connect", "Oracle连接方式"],
           ["/oracle/instance", "Oracle实例"],
