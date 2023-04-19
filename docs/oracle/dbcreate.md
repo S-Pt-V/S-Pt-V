@@ -165,4 +165,21 @@ select status from v$instance;
 dbca -slient -createDatabase -responseFile /home/oracle/dbca.rsp
 ```
 
+## 使用脚本创建
+
+::: warning
+在数据库安装中写了一部分，但是最好重新弄一遍
+:::
+
 ## 命令行方式
+
+```sh
+# oracle 用户执行
+dbca -silent -createDatabase -templateName General_Purpose.dbc -gdbname oradb.example.com -sid oradb -responseFile NO_VALUE -characterSet AL32UTF8 -memoryPercentage 30 -emConfiguration LOCAL
+
+# 创建容器数据库，多一个参数createAsContainerDatabase
+dbca -silent -createDatabase -createAsContainerDatabase true -templateName General_Purpose.dbc -gdbname oradb.example.com -sid oradb -responseFiel NO_VLAUE -characterSet AL32UTF8 -memoryPercentage 30 -emConfiguration LOCAL
+```
+
+创建不同数据库时修改sid和全局数据库名称gdbname
+

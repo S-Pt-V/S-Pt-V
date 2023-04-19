@@ -311,4 +311,37 @@ source .bash_profile
 /etc/hosts中的主机名配置错误，在运行configure时会报错，跟监听有关。
 :::
 
-运行该命令创建的时一个容器数据库
+运行该命令创建的时一个容器数据库。
+
+通过修改配置文件中的SID可以创建新的数据库。配置文件名中间也要改成新的SID。
+
+## 克隆
+
+可以去看看官方文档。
+
+------------
+
+::: tip
+创建三个库，两个容器数据库，一个非容器数据库，后续可能会用到。
+
+在不同SID时连接就可以连接到不通数据库。
+
+```sh
+sqlplus / as sysdba
+select status,cdb,instance_name from v$instance;
+```
+
+:::
+
+## 卸载
+
+1. 使用的install工具删除安装的Oracle软件可执行文件和配置文件
+2. 删除/etc目录下的oraInst.loc、oratab，删除/opt目录下的ORCLfmap
+3. 删除/usr/local/bin下面Oracle的所有文件
+4. 删除/tmp目录下Oracle的相关文件
+5. 删除Oracle安装目录
+6. 删除Oracle用户、dba、oinstall用户组
+
+deinstall在ORACLE_HOME目录下
+
+![](./assets/2023-04-19-14-59-39.png)
