@@ -50,4 +50,3 @@ SGA下有许多组件，例如Shared Pool共享池，Database Buffer Cache, Redo
 Oracle的整个体系架构，主要由两部分构成，实例和数据库：
 
 ![](./assets/2022-12-01-14-30-24.png)
-

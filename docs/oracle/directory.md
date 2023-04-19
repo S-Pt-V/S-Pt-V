@@ -105,7 +105,7 @@ network 监听器listener.ora和sqlnet.ora以及tnsnames.ora等
 ### rdbms
 ![](./assets/2022-12-01-11-24-49.png)
 
-rdbms的admin下存放.sql结尾的脚本文件
+rdbms的admin下存放.sql结尾的脚本文件。
 
 ### network
 进行网络配置

@@ -39,6 +39,9 @@ sqlplus sys/oracle@192.168.11.1:1521/orcl as sysdba
 ```shell
 netmgr
 ```
+
+网络服务名称随便定义
+
 ![](./assets/2022-12-01-12-10-02.png)
 ![](./assets/2022-12-01-12-11-35.png)
 ![](./assets/2022-12-01-12-12-11.png)
