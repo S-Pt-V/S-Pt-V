@@ -102,3 +102,99 @@ shutdown
 检查点进程，做检查点时就是在执行检查点进程。<br />
 检查点进程会更新控制文件头部和数据文件头部的信息，通知DBWn将脏数据写回数据文件。从内存写入磁盘，保持数据的一致。
 ![](./assets/2022-12-02-14-43-50.png)
+
+## Oracle多租户环境
+
+多租户环境(Multienant Environment)中，允许一个数据库容器CDB承载多个可插拔数据库(PDB)。CDB全称为Container Database，即，数据库容器，PDB全称为Pluggable Database，即可插拔数据库。
+
+![](./assets/2023-04-20-16-03-01.png)
+
+ROOT 又叫CDB$ROOT，根容器，也称为CDB容器。CDB存储着ORACLE提供的元数据(表的属性)和Common User。CDB容器中承载着多个PDB。这些PDB在该CDB下管理。
+
+SEED 种子容器。PDB$SEED，是创建PDB数据库的模板，是只读的，不能在Seed中添加或修改对象。一个CDB中有且只能有一个SEED。
+
+PDB CDB中可以有一个或多个PDBS，最多可以有4096个。每个PDB跟11G的数据库一样，PDBS向后兼容，可以像以前在数据库中那样操作PDBS。
+
+每个组件都能被称为一个容器，根容器，种子容器，PDB容器。每个容器在CDB中都有一个独一无二的ID和名称，是不能重复的。
+
+```sh
+select PDB_ID,DBID,PDB_NAME,CON_UID from cdb_pdbs;
+```
+
+之前的启动和关闭过程都是CDB的启动和关闭。（startup shutdown）
+
+在调试数据库时以受限的模式打开数据库，不希望其他用户连接。
+
+```sh
+startup open restrict
+```
+
+首先执行shutdown abort，再执行startup。
+
+```sh
+startup force
+```
+
+默认情况下使用sqlplus / as sysdba 登录的是CDB。在CDB启动后，PDB是自动启动到mount状态，而不是OPEN。(种子容器是READ ONLY)
+```sh
+sqlplus / as sysdba
+show pdbs
+```
+
+启动和关闭CDB：
+```sh
+# 启动
+startup [nomount | mount | restrict | force | read only]
+# 关闭
+shutdown [immediate | abort]
+
+alter database close;
+alter database dismount;
+shutdown
+```
+
+启动和关闭PDB
+```sh
+alter pluggable databse [pdbname] open;
+alter pluggable databse [pdbname] close;
+alter pluggable databse [pdbname] open read only force;
+alter pluggable databse [pdbname],[pdbname] close immediate;
+select name,open_mode from v$pdbs;
+alter pluggable databse all open;
+alter pluggable databse all close immediate;
+alter pluggable databse all except [pdbname] open;
+alter pluggable databse all except [pdbname] close immediate;
+
+# 切换容器
+alter session set container = pdb1;
+
+```
+
+在CDB中运行startup是开启数据库，closed->nomount->mounted->open
+
+在PDB中运行startup是开启PDB容器。
+
+## PDB自动启动
+
+默认情况下，PDB不会随CDB额启动而启动。CDB启动后，PDB处于mount状态。
+
+PDB自动启动设置：
+
+### 创建触发器
+
+```sh
+# 方法1，创建一个触发器
+create trigger open_all_pdbs
+    after startup on database
+begin
+    execute immediate 'alter pluggable databse all open';
+end open_all_pdbs;
+```
+### 保存PDB状态
+
+在 pdb open状态时保存状态
+```sh
+SQL> alter pluggable database all save state;
+# 取消自动启动
+SQL> alter pluggable database all discard state;
+```
