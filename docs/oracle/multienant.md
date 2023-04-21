@@ -1,6 +1,5 @@
 # 多租户架构
 
-
 ## 多租户架构
 容器是多租户容器数据库（CDB）中模式、对象和相关结构的集合，在逻辑上应用程序将其显示为单独的数据库。在CDB中，每个容器都有一个唯一的ID和名称。根和每个可插拔数据库（pdb）都被视为一个容器。PDB隔离数据库可操作，因此从用户或应用程序的角度来看，每个pdb看起来都像是传统的非cdb。
 
@@ -115,3 +114,169 @@ cdb的结构和非cdb相同，只是每个pdb和应用程序根目录都有自�
 
 ### CDB和PDB管理
 
+#### 查看数据库是否为CDB
+
+```sh
+SQL> select name, decode(cdb, 'YES', 'Multitenant Option enabled', 'Regular 12c Database:')"Multitenant Option", open_mode, con_id from v$database;
+```
+
+#### 连接到CDB
+
+##### 简易方式连接
+
+sqlplus命令，/分割用户名和口令，as sysdba
+
+使用操作系统验证省略用户名密码。当前连接到系统的oracle用户，说明有权限连接到数据库。此时不进行口令验证，随便怎么填进去都是sys用户。
+
+```sh
+# 操作系统验证方式
+sqlplus / as sysdba
+show con_name
+```
+
+当使用网络连接时，必须指定用户名跟口令。此时使用的是数据库口令文件验证。口令文件为 $ORACLE_HOME/dbs/orapw[sid]
+
+```sh
+# 简易方式
+sqlplus sys/oracle@192.168.1.10:1521/orcl as sysdba
+```
+
+##### 使用net service方式连接
+
+需要使用netmgr配置网络服务名。
+
+![](./assets/2023-04-21-14-50-36.png)
+
+在Service Naming中新建。新建的名称自己定义，TCP/IP本机1521，**Service Name不能随便写，需要查询**。
+
+```sh
+show parameter service_name
+```
+
+配置完成后可以用tnsping验证。
+
+![](./assets/2023-04-21-14-54-51.png)
+
+此时可以用以下方式连接
+
+```sh
+sqlplus sys/oracle@abc as sysdba
+```
+
+![](./assets/2023-04-21-14-55-48.png)
+
+通过命令lsnrcl可以看到配置的服务名
+
+```sh
+lsnrcl status
+```
+
+![](./assets/2023-04-21-14-58-15.png)
+
+#### 连接到PDBs
+
+##### 使用简单方式连接到pdb:(prod1)
+
+通过查询监听服务，使用sqlplus连接
+
+```sh
+sqlplus sys/oracle@192.168.10.1:1521/pdb1 as sysdba
+```
+
+##### 使用net service方式连接
+
+使用netmgr，跟之前记录的方法一样。
+
+```sh
+sqlplus sys/oracle@abc_pdb1 as sysdba
+```
+
+#### 创建一个新的PDB
+
+从sedd PDB创建一个PDB，每个CDB有一个PDB template，名为PDB$Seed。
+
+创建一个操作系统目录用于存放新创建的PDB数据库的数据文件和临时文件：
+```sh
+mkdir /u01/app/oracle/oradata/cdb1/prod3
+```
+
+##### 创建PDB
+
+创建一个可插拔数据库prod3，管理员用户为wl，密码口令为123。并将'/u01/app/oracle/oradata/ORCL/pdbseed'数据文件转化为新创建的容器数据文件'/u01/app/oracle/oradata/cdb1/prod3'，将种子容器数据问件复制到新的目录。
+
+```sh
+# 需要进入根容器创建
+create pluggable database prod3 admin user wl identified by 123 file_name_convert=('/u01/app/oracle/oradata/ORCL/pdbseed', '/u01/app/oracle/oradata/cdb1/prod3');
+```
+
+#### PDB删除
+
+在根容器中drop。
+
+一般删除容器的时候会保留数据文件，而pdb删除前若没有拔出，则不保留数据文件。
+
+```sh
+SQL> conn / as sysdbq
+SQL> alter pluggable database all close immediate;
+SQL> select name, open_mode from v$pdbs;
+SQL> drop pluggable database prod3_his includeing datafiles;
+SQL> select name, open_mode from v$pdbs;
+```
+### CDB数据字典
+
+多租户容器数据库（CDB）中，数据字典表和视图定义的元素数据仅存储在根目录中。每个可插拔数据库（PDB）都有自己的一组数据字典表和视图，用于包含在PDB中的数据库对象。
+
+在根容器下查询
+
+![](./assets/2023-04-21-15-54-49.png)
+
+cdb_objects存放所有容器的对象，dba_objects只存放根容器下sys用户的对象，user_objects只存放当前用户的对象。
+
+|View|Description|
+|---|---|
+|{cdb/dba}_pdbs|CDB或PDB的信息|
+|cdb_properties|数据库参数|
+|{cdb/dba}_pdb_history|每个pdb的历史信息|
+|{cdb/dba}_container_data|显示用户级别和一些属性信息|
+|{cdb/dba}_pdb_saved_status|保存的状态|
+|{cdb/dba}_cdb_app_errors|错误消息|
+|{cdb/dba}_cdb_rsrc_plans|pdb资源计划指令|
+|{user/all/dba/cdb}_objects|查看所有对象|
+|{all/dba/cdb}_services|网络服务名|
+
+### 创建和移除PDB及应用程序容器
+
+创建PDB的方法：
+
+![](./assets/2023-04-21-16-29-33.png)
+
+可以克隆、重定位、插入、刷新代理等方式。
+
+#### 利用种子容器创建PDB
+
+![](./assets/2023-04-21-16-31-47.png)
+
+其实就是把种子容器的数据文件拷贝生成新的PDB的数据文件。
+
+```sh
+# 没有指定pdb_file_name_convert参数直接运行下面的命令会出错
+# 这个是数据库的参数，跟之前示例中指定的不一样。之前的是命令的参数。
+alter session set pdb_file_name_convert='pdbseed', 'salpdb1';
+create pluggable database salpdb1 admin user salam identified by 123;
+```
+![](./assets/2023-04-21-16-37-53.png)
+
+```sh
+# 创建PDB并将预定义的Oracle角色授予PDB管理员
+alter session set pdb_file_name_convert = 'pdbseed', 'salpdb2';
+create pluggable database salpdb2 admin user saladm identified by 123 roles=(dba);
+```
+
+```sh
+# 创建容器时指定参数
+create pluggable database pdb3 admin user wl identified by oracle 
+storage(maxsiaze 3g)
+default tablespace wl
+datafile '/u01/app/oracle/oradata/cdb1/pdb3/w1l1.dbf' size 200m autoextend on path_prefix='/u01/app/oracle/oradata/cdb1/pdb3/'
+fil_name_convert = ('/u01/app/oracle/oradata/ORCL/pdbseed', '/u01/app/oracle/oradata/cdb1/pdb3');
+```
