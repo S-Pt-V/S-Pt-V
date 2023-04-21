@@ -71,7 +71,8 @@ module.exports = {
           ["/oracle/sid", "Oracle SID"],
           ["/oracle/checkpoint", "Oracle检查点"],
           ["/oracle/instancerecovery", "Oracle实例恢复"],
-          ["/oracle/startup&shutdown", "Oracle启动和关闭"]
+          ["/oracle/startup&shutdown", "Oracle启动和关闭"],
+          ["/oracle/multienant", "Oracle多租户架构"]
         ]
       },
       {
