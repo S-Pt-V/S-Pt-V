@@ -361,6 +361,10 @@ Refresh MODE语句：
 &ensp;&ensp;&ensp;&ensp;Refresh MODE MANUAL，创建手动刷新的PDB。
 &ensp;&ensp;&ensp;&ensp;Refresh MODE EVERY number_of_minutes MINUTES，创建以周期性刷新的PDB。
 
+::: TIP
+代理pdb是对源pdb的引用，可刷新pdb是增量同步1的刷新。
+:::
+
 注意事项：
 1. 如果PDB被Clone到的CDB的字符集不是AL32UTF8，那么源与目标字符集必须兼容。
 2. 源端与目标端的字节顺序必须相同。

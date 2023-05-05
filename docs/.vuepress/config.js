@@ -72,7 +72,10 @@ module.exports = {
           ["/oracle/checkpoint", "Oracle检查点"],
           ["/oracle/instancerecovery", "Oracle实例恢复"],
           ["/oracle/startup&shutdown", "Oracle启动和关闭"],
-          ["/oracle/multienant", "Oracle多租户架构"]
+          ["/oracle/multienant", "Oracle多租户架构"],
+          ["/oracle/cdb", "CDB"],
+          ["/oracle/pdb", "PDB"],
+          ["/oracle/architecture", "体系结构"]
         ]
       },
       {
