@@ -75,7 +75,8 @@ module.exports = {
           ["/oracle/multienant", "Oracle多租户架构"],
           ["/oracle/cdb", "CDB"],
           ["/oracle/pdb", "PDB"],
-          ["/oracle/architecture", "体系结构"]
+          ["/oracle/architecture", "体系结构"],
+          ["/oracle/memoryarchitecure", "内存结构"]
         ]
       },
       {
