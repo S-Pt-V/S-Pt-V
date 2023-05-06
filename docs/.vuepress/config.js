@@ -77,7 +77,8 @@ module.exports = {
           ["/oracle/pdb", "PDB"],
           ["/oracle/architecture", "体系结构"],
           ["/oracle/memoryarchitecure", "内存结构"],
-          ["/oracle/progressarchitecure", "进程结构"]
+          ["/oracle/progressarchitecure", "进程结构"],
+          ["/oracle/storagearchitecure", "物理存储结构"]
         ]
       },
       {
