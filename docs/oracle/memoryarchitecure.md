@@ -172,3 +172,92 @@ redo log buffer中存储数据库更改条目信息，服务器进程写入到re
 共享池缓存的是各种类型的程序数据。例如已解析的SQL，PL/SQL代码，系统参数和数据字典信息。
 
 ![共享池描述](./assets/2023-05-05-15-27-02.png)
+
+## In-Memory
+
+Oracle数据库传统上以行格式存储数据。在行格式数据库中，数据库中存储的每个新事务或新记录都表示为表中的一个新行，而在查询数据时是利用传统Buffer Cache。
+
+在In-Memory中所存储的数据不是使用传统行格式而是列式。每个列作为单独的结构存储到内存中，并且数据被优化用于快速扫描。In-Memory不会替代buffer cache，是对buffer cache的一种补充，因此，数据在内存中可以以行与列的形式进行存储。列格式适用于报表类，分析，选择少量列但是查询要访问大部分的数据的场景。
+
+它是内存中的一个区域。
+
+![行格式与列格式](./assets/2023-05-06-09-24-00.png)
+
+1. 是行格式的补充
+2. 提高查询速度
+3. 适用于报表分析
+
+启用In-Memory必须将INMEMORY_SIZE设置为非0值。INMEMORY_SIZE是个实例级参数，默认为0，设置一个非0值时，最小值为100M。
+
+通常情况下，sys用户下的对象及SYSTEM、SYSAUX表空间上的对象无法使用IMO特性，但通过设置“_inmemory_enable_sys”隐含参数也可以使用。
+
+### 开启In-Memory
+
+1. 修改INMEMORY_SIZE参数
+```sh
+alter system set inmemory_size=500m scope=spfile;
+```
+2. 检查SGA参数的设置，确保在设置完inmemory_size参数之后数据库实例可以正常启动。如果数据库使用了ASM，则需要检查sga_target参数。如果使用了ASM，则需要检查MEMORY_TARGET参数，同时也需要检查SGA_MAX_TARGET。从12.2开始，可以动态调整In-Memory区域大小，因此，只需增加INMEMORY_SIZE数值即可。
+
+3. 重启数据库实例
+可以看到在实例启动过程中分配了In-Memory Area
+
+![重启数据库](./assets/2023-05-06-09-32-13.png)
+
+4. 查看In-Memory特性是否开启
+```sh
+show parameter inmemory_size
+```
+
+### 关闭In-Memory
+
+将该参数修改为0，并重启数据库。
+
+### 使用
+
+#### TABLE级使用
+
+```sh
+# 创建表时加入 inmemory 关键字；
+create table test (id number) inmemory;
+# 表创建完毕后修改；
+alter table test inmemory;
+```
+
+#### COLUMN级使用
+
+```sh
+create table imo_tl(id number, name varchar(12), type varchar(12));
+create table imo_t2(id number, name varchar(12), type varchar(12));
+alter table imo_t1 inmemory (id) no inmemory (name, type);
+alter table imo_t2 inmemory (name) no inmemory (id, type);
+col table_name format a20
+col column_name format a20
+```
+
+#### 表空间级启用
+
+创建表空间或修改表空间，启用inmemory，在属性为inmemory的表空间中创建的对象自动加载inmemory属性，除非显示设置对象为no inmemory。
+
+```sh
+create tablespace imotest datafile '/u01/app/oracle/oradata/ORCL/imotest01.dbf' size 100M default inmemory;
+alter tablespace_name, def_inmemory from dba_tablespaces where tablespace_name in ('IMOTEST');
+```
+
+#### 查询哪些列开启了inmemory
+
+```sh
+select table_name. column_name, inmemory_compression from v$im_column_level where table_name = "IMO_T1";
+```
+
+### inmemory优先级
+
+pirority none
+
+pirority low
+
+pirority medium
+
+pirority high
+
+pirority critical
