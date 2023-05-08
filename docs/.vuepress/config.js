@@ -135,6 +135,15 @@ module.exports = {
         ]
       },
       {
+        title: "VUE",
+        path: "/vue/",
+        collapsable: true,
+        children: [
+          ["/vue/environment", "环境配置"],
+          ["/vue/project", "项目创建"],
+        ]
+      },
+      {
         title: "Python",
         path: "/python/",
         collapsable: true,
