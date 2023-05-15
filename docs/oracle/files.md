@@ -143,6 +143,126 @@ CDB与PDB不同值的相同参数
 
 ## 控制文件
 
+### 控制文件存储的数据信息
+
+1. 数据库名称和数据库唯一标识符（DBID），通过select name, dbid from v$database；查询DBID和数据库名称。
+2. 创建数据库的时间戳。
+3. 有关数据文件、联机重做日志文件、归档重做日志文件的信息，位置、文件名称等物理结构信息。
+4. 表空间信息。
+5. 检查点信息。
+6. 日志序列号信息。
+
+控制文件包含数据文件、联机重做日志文件等信息。
+
+控制文件也会跟踪数据库的结构变化。当数据库打开时，对数据文件增加表空间，或者对表空间增加数据文件，表空间脱机联机，这类数据库结构变化发生时会更新数据文件，会在控制文件中记录。
+
+控制文件包含未打开数据库时必须可访问的元数据。
+
+至少有一个控制文件、建议有多个控制文件。多个控制文件相互镜像，需要能够同时使用。防止控制文件丢失，避免单点故障。
+
+在mount、open时，数据库发生结构变化时控制文件会被使用。
+
+### 控制文件位置
+
+查看控制文件位置。
+
+```sh
+select name from v$controlfile;
+```
+
+control_files参数记录了控制文件位置，该参数记录在参数文件中。在nomount状态打开参数文件后，在参数文件中找到该参数打开控制文件，数据库进入mount状态。
+
+```sh
+show parameter control_files
+```
+![](./assets/2023-05-15-08-55-15.png)
+
+
+### 控制文件操作
+
+**增加**：
+
+先查看参数control_files，再使用命令在该参数中原有的位置基础上新增新路径。路径新增完成后，关闭数据库生成新文件，复制即可。复制后再打开。
+
+```sh
+alter system set control_files='[原有路径]','[原有路径]','[新的位置]' scop=spfile;
+```
+
+上述方法适用于数据库使用spfile的情况下，使用pfile时需要用vim修改pfile。同样是修改control_files。
+
+::: TIPS
+pfile中参数修改直接修改pfile文件，spfile中的参数需要使用命令修改。
+:::
+
+**删除、重定位、重命名**的操作方法与新增相同。
+
+### 控制文件备份
+
+备份二进制文件：
+
+```sh
+alter database backup controlfile to "d:\control-back.tcl";
+```
+
+备份文本文件：
+
+```sh
+alter database backup controlfile to trace as 'd:\control_back_text.ctl';
+```
+
+在对数据库的物理结构改变后，需要重新对控制文件备份，包括：
+1. 增加、删除、重命名数据文件
+2. 增加、删除表空间
+3. 增加、删除日志组成日志文件。
+
+### 创建控制文件
+
+在归档模式下打开数据库
+
+```sh
+archive log list;
+shutdown immediate;
+# 开归档
+alter database archivelog;
+alter database open;
+archive log list;
+```
+
+![](./assets/2023-05-15-09-19-48.png)
+![](./assets/2023-05-15-09-22-38.png)
+![](./assets/2023-05-15-09-24-08.png)
+
+备份控制文件
+
+```sh
+alter database backup controlfile to trace as '/home/oracle/con_text.ctl';
+```
+
+找到当前所有的控制文件并删除。
+
+```sh
+select name from v$controlfile;
+select 'host rm -rf' || name from v$controlfile;
+```
+![](./assets/2023-05-15-09-26-14.png)
+![](./assets/2023-05-15-09-28-15.png)
+
+重启数据库，此时重新创建控制文件即可。此时会报00205控制文件的错误信息。
+
+![](./assets/2023-05-15-09-29-08.png)
+
+重建控制文件使用cont_text.ctl中的命令。选择带有NORESETLOGS的命令。
+
+![](./assets/2023-05-15-09-31-49.png)
+
+创建完成后，恢复数据库并open
+
+```sh
+recover database
+alter database open;
+alter pluggable databse all open;
+```
+
 ## 联机在线重做日志
 
 ## 归档文件
