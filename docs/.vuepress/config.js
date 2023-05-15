@@ -79,7 +79,8 @@ module.exports = {
           ["/oracle/memoryarchitecure", "内存结构"],
           ["/oracle/progressarchitecure", "进程结构"],
           ["/oracle/physicstorage", "物理存储结构"],
-          ["/oracle/logicstorage", "逻辑存储结构"]
+          ["/oracle/logicstorage", "逻辑存储结构"],
+          ["/oracle/files", "文件"]
         ]
       },
       {
