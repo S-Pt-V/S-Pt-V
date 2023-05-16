@@ -494,12 +494,116 @@ alter system set db_recovery_file_dest=[位置]
 
 ### 开启归档
 
-#### 查看数据库归档情况
+在mount下开启归档。
+
+1. 查看数据库归档情况
 ```sh
 archive log list
 ```
-#### 关闭数据库
+2. 关闭数据库
 ```sh
 shutdown immediate
 ```
-#### 
+3. 启动数据库到mount
+```sh
+startup mount
+```
+
+4. 打开归档
+```sh
+# 关闭
+alter database noarchivelog;
+# 开启
+alter database archivelog;
+```
+
+5. 打开数据库
+```sh
+alter database open;
+archive log list
+```
+
+### 归档日志文件位置
+
+默认在闪回恢复区。
+
+```sh
+archive log list
+```
+
+可以使用如下方法修改位置
+
+![修改存储位置](./assets/2023-05-16-10-03-15.png)
+
+1. 方法1
+log_archive_dest_state_n可以控制这31个位置启用或者停用。前10个参数可以设置为本地或远端，后面的参数只能设置到远端。每个位置都有一个state参数控制该位置的启用和停用。
+```sh
+# 停用
+alter system set log_archive_state_2=defer;
+# 启用
+alter system set log_archive_state_2=enable;
+```
+修改存放位置：
+```sh
+alter system set log_archive_dest_1='location=/home/oracle';
+```
+可以在对应目录看到.dbf的归档文件。
+![归档文件](./assets/2023-05-16-10-13-33.png)
+文件后缀由log_archive_format参数决定
+![归档文件后缀参数](./assets/2023-05-16-10-14-22.png)
+可以修改为其他后缀，这是一个静态参数需要加scope选项，并重启生效。
+```sh
+alter system set log_archive_format='%t_%s_%r.arc' scope=spfile;
+```
+系统归档一次之后可以在目录中看到新的文件
+```sh
+alter system archive log current;
+```
+![修改后缀后的文件](./assets/2023-05-16-10-18-38.png)
+此时也可以看到归档位置已修改。可以同时归档到多个位置。
+![归档状态](./assets/2023-05-16-10-19-23.png)
+
+2. 方法2
+方法2和方法1是互斥的，只能使用其中一种。
+```sh
+alter system set log_archive_dest='/tmp'
+```
+![](./assets/2023-05-16-10-27-25.png)
+需要将方法1中修改过的参数和闪回恢复区reset，重启生效。
+```sh
+alter system reset LOG_ARCHIVE_DEST_n;
+alter system reset BD_RECOVERY_FILE_DEST;
+```
+此时如果要设置多个归档位置需要设置log_archive_duplex_dest
+```sh
+alter system set log_archive_suplex_dest='/home/oracle';
+```
+
+一般都使用第一种方法，因为使用第二种方法时闪回恢复区就不能用了。
+
+### 归档成功的最小个数
+
+前提是已经设置多个归档位置
+
+使用初始化参数LOG_ARCHIVE_DEST_n配置归档位置时，可以使用初始化参数log_archive_min_succeed_dest控制本地归档的最小成功个数。
+
+假设设置了三个归档位置，限制最小成功个数为2的话，则只会归档两个位置。
+
+```sh
+alter system set log_archive_min_suceed_dest=2;
+```
+![](./assets/2023-05-16-10-48-31.png)
+
+### 显示归档日志位置
+
+查看归档位置
+```sh
+select destination from v$archive_dest;
+```
+![](./assets/2023-05-16-10-50-57.png)
+
+查看产生的归档日志
+```sh
+select name,SEQUENCE#,FIRST_CHANGE#,NEXT_CAHNGE# from v$archived_log;
+```
+![](./assets/2023-05-16-10-53-10.png)
