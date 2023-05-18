@@ -80,7 +80,8 @@ module.exports = {
           ["/oracle/progressarchitecure", "进程结构"],
           ["/oracle/physicstorage", "物理存储结构"],
           ["/oracle/logicstorage", "逻辑存储结构"],
-          ["/oracle/files", "文件"]
+          ["/oracle/files", "文件"],
+          ["/oracle/tablespace", "表空间"]
         ]
       },
       {
