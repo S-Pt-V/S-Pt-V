@@ -19,40 +19,9 @@ module.exports = {
         path: "/network/",
         collapsable: true,
         children: [
-          ["/network/osi", "OSI模型"],
-          ["/network/Internet", "互联网"],
-          ["/network/IP", "IP地址"],
-          ["/network/switch", "交换机"],
-          ["/network/router", "路由器"],
-          ["/network/storage", "存储"],
-        ]
-      },
-      {
-        title: "CCNA",
-        path: "/CCNA/",
-        collapsable: true,
-        children: [
-          ["/CCNA/network", "计算机网络基础"],
-          ["/CCNA/ciscocmd", "思科基础命令"],
-          ["/CCNA/ip", "IP子网划分"],
-          ["/CCNA/arp", "ARP协议"],
-          ["/CCNA/static_route", "静态路由协议"],
-          ["/CCNA/RIP", "RIP"],
-          ["/CCNA/OSPF", "OSPF"],
-          ["/CCNA/EIGRP", "EIGRP"],
-          ["/CCNA/switch", "交换基础原理"],
-          ["/CCNA/vlan", "vlan协议"],
-          ["/CCNA/vtp", "VTP协议"],
-          ["/CCNA/stp", "生成树"],
-          ["/CCNA/acl", "访问控制列表"]
-        ]
-      },
-      {
-        title: "CCNP",
-        path: "/CCNP/",
-        collapsable: true,
-        children: [
-          ["/CCNP/static_route", "静态路由"]
+          ["/network/Basics", "基础知识"],
+          ["/network/CCNA", "CCNA"],
+          ["/network/CCNP", "CCNP"]
         ]
       },
       {
@@ -60,7 +29,6 @@ module.exports = {
         path: "/oracle/",
         collapsable: true,
         children: [
-          // OCP课程day1~day2
           ["/oracle/structure", "Oracle体系架构"],
           ["/oracle/installation", "Oracle软件安装"],
           ["/oracle/dbcreate", "创建数据库"],
