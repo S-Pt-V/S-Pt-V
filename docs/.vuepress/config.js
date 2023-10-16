@@ -1,8 +1,16 @@
 module.exports = {
   title: "技术文档",
+  extendMarkdown(md) {
+    md.set({ html: true });
+    md.use(require("markdown-it-katex"));
+  },
+  head: [
+    ['link', { rel: 'stylesheet', href: 'https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css' }],
+    ['link', { rel: "stylesheet", href: "https://cdnjs.cloudflare.com/ajax/libs/github-markdown-css/2.10.0/github-markdown.min.css" }]
+  ],
   themeConfig: {
     nav: [
-      {text: "主页", link: "/"}
+      { text: "主页", link: "/" }
     ],
     sidebar: [
       ["/", "主页"],
@@ -22,6 +30,18 @@ module.exports = {
           ["/network/Basics", "基础知识"],
           ["/network/CCNA", "CCNA"],
           ["/network/CCNP", "CCNP"]
+        ]
+      },
+      {
+        title: "虚拟化",
+        path: "/virtualize/",
+        collapsable: true,
+        children: [
+          ["/virtualize/interface", "虚拟网卡"],
+          ["/virtualize/yum", "yum换源"],
+          ["/virtualize/ntp", "ntp服务"],
+          ["/virtualize/dns", "dns服务"],
+          ["/virtualize/kms", "kms服务"],
         ]
       },
       {
@@ -53,23 +73,19 @@ module.exports = {
         ]
       },
       {
-        title: "虚拟化",
-        path: "/virtualize/",
-        collapsable: true,
-        children: [
-          ["/virtualize/interface", "虚拟网卡"],
-          ["/virtualize/yum", "yum换源"],
-          ["/virtualize/ntp", "ntp服务"],
-          ["/virtualize/dns", "dns服务"],
-          ["/virtualize/kms", "kms服务"],
-        ]
-      },
-      {
         title: "嵌入式",
         path: "/embeded/",
         collapsable: true,
         children: [
           ["/embeded/stm32", "stm32"]
+        ]
+      },
+      {
+        title: "数学",
+        path: "/math/",
+        collapsable: true,
+        children: [
+          ["/math/linearalgebra", "线性代数"]
         ]
       },
       {
@@ -91,7 +107,7 @@ module.exports = {
           ["/cv&dl/FC", "全连接神经网络"],
           ["/cv&dl/CNN", "卷积神经网络"],
           ["/cv&dl/classic", "经典网络分析"],
-          ["/cv&dl/segmentation","图像分割"]
+          ["/cv&dl/segmentation", "图像分割"]
         ]
       },
       {
@@ -101,7 +117,7 @@ module.exports = {
         children: [
           ["/db_demo/database", "数据库配置"],
           ["/db_demo/dotnetcore", "Asp.net core 项目开发"],
-          ["/db_demo/vue","前端开发"]
+          ["/db_demo/vue", "前端开发"]
         ]
       },
       {
@@ -126,7 +142,7 @@ module.exports = {
         path: "/sangfor/",
         collapsable: true,
         children: [
-          ["/sangfor/firewall","AF"],
+          ["/sangfor/firewall", "AF"],
           ["/sangfor/ac", "AC"],
           ["/sangfor/vpn", "VPN"]
         ]
