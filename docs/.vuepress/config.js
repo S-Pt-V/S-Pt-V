@@ -89,6 +89,11 @@ module.exports = {
         ]
       },
       {
+        title: "OpenCV",
+        path: "/Opencv/",
+        collapsable: true
+      },
+      {
         title: "机器学习",
         path: "/machinelearning/",
         collapsable: true,
