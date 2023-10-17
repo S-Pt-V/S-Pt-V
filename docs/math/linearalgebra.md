@@ -698,7 +698,7 @@ $$
     AA^{-1} = I
 $$
 
-对于方阵，其左逆矩阵等于右逆矩阵。非方阵的左逆和右逆不一样。
+对于方阵，其左逆矩阵等于右逆矩阵，这一点不好证明，但是是正确的。非方阵的左逆和右逆不一样。
 
 对于奇异阵，没有逆。举一个2x2的例子：
 
@@ -738,5 +738,121 @@ $$
 
 结论是：不可逆矩阵、奇异矩阵其列能通过线性组合得到0
 
-什么样的矩阵有逆？
+什么样的矩阵有逆？例如：
+$$
+\begin{bmatrix}
+    1 & 3 \\
+    2 & ?
+\end{bmatrix}
+$$
 
+？处可以为：7，8，等等但是就是不能为6。偏爱行列式的人会算出该矩阵的行列式不为0，偏爱列的人会发现这两列不共线，等等。
+
+如何求出矩阵的逆？
+
+$$
+\begin{bmatrix}
+    1 & 3 \\
+    2 & 7
+\end{bmatrix}
+\begin{bmatrix}
+    ? & ? \\
+    ? & ?
+\end{bmatrix}
+=
+\begin{bmatrix}
+    1 & 0 \\
+    0 & 1
+\end{bmatrix}
+$$
+
+取第一列，令其为a，b，此时满足方程A乘以该列可以得到$\begin{bmatrix} 1 & 0 
+\end{bmatrix}$<br />
+取第二列，令其为c，d，此时满足方程A乘以该列可以得到$\begin{bmatrix} 0 & 1 
+\end{bmatrix}$
+
+$$
+\begin{bmatrix}
+    1 & 3 \\
+    2 & 7
+\end{bmatrix}
+\begin{bmatrix}
+    a & c \\
+    b & d
+\end{bmatrix}
+=
+\begin{bmatrix}
+    1 & 0 \\
+    0 & 1
+\end{bmatrix}
+$$
+
+$$
+\begin{cases}
+    \begin{bmatrix}
+        1 & 3 \\
+        2 & 7
+    \end{bmatrix}
+    \begin{bmatrix}
+        a \\
+        b
+    \end{bmatrix}
+    =
+    \begin{bmatrix}
+        1 \\
+        0
+    \end{bmatrix} \\
+    \begin{bmatrix}
+        1 & 3 \\
+        2 & 7
+    \end{bmatrix}
+    \begin{bmatrix}
+        c \\
+        d
+    \end{bmatrix}
+    =
+    \begin{bmatrix}
+        0 \\
+        1
+    \end{bmatrix}
+\end{cases}
+$$
+
+这就是高斯Gauss的方法。求逆其实与求方程组是一样的，但是在矩阵维度较高时，这种方法计算量就非常大了。
+
+此时引入高斯-若尔当 Gauss-Jordan思想，可以同时处理两个方程组。
+
+在该矩阵右侧加上一个单位阵$\begin{bmatrix} 1 & 0 \\ 0 & 1 \end{bmatrix}$，称为一个增广矩阵。再在此基础上进行消元，将左侧变为单位阵，右侧即为逆矩阵。
+
+$$
+\begin{bmatrix}
+    1 & 3 & | & 1 & 0 \\
+    2 & 7 & | & 0 & 1
+\end{bmatrix}
+$$
+
+$$
+\begin{bmatrix}
+    1 & 3 & | & 1 & 0 \\
+    0 & 1 & | & -2 & 1
+\end{bmatrix}
+$$
+
+$$
+\begin{bmatrix}
+    1 & 0 & | & 7 & -3 \\
+    0 & 1 & | & -2 & 1
+\end{bmatrix}
+$$
+
+为什么这里能够得到A的逆？只进行了行变换，相当于左乘之前得出的行变换矩阵E。
+
+$$
+    E[AI] = [IE]
+$$
+$$
+    EA = I
+$$
+$$
+    E = A_{-1}
+$$
