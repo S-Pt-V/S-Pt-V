@@ -69,7 +69,6 @@ int main()
 	destroyAllWindows();
 	return 0;
 }
-
 ```
 
 ## MAT容器
