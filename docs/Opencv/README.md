@@ -289,5 +289,94 @@ Opencv中定义的Vec3b就是 一个元素有三个通道，每个通道元素�
 
 不是很想写
 
-## 
+## MAT类运算
 
+### 四则运算
+
+#### 符号运算
+
+与常识相符合的加减乘除，直接利用数学符号表示矩阵的运算。两个矩阵进行加法，乘法，乘或除一个系数，整体加或减去一个数。
+
+矩阵的乘法，需要两个Mat类的尺寸和类中存储的数据量一样。OpenCV不会进行类型的自动转换。
+
+Mat类减去一个数时，是所有元素减去这个数。
+
+```cpp
+e = a + b;
+f = c - d;
+g = 2 * a;
+h = d / 20;
+i = a - 1;
+```
+
+#### 矩阵乘法
+
+##### 矩阵乘积
+
+正常的矩阵乘法运算。
+
+##### 向量内积
+
+.dot，向量(矩阵)对应元素相乘，最后求和。
+
+```cpp
+a.dot(b)
+```
+
+要求两个Mat类元素个数相同，不要求维度相同。
+
+##### 对应位元素乘积
+
+.mul()，要求两个矩阵维度、数据类型相同。
+
+### 运算函数
+
+可以查官网的使用手册。常用函数如下
+
+|函数名|作用|
+|---|---|
+|absdiff()|两个矩阵对应元素差的绝对值|
+|add()|两个矩阵求和|
+|addWeighted()|两个矩阵线性求和|
+|divide()|矩阵除法|
+|invert()|矩阵求逆|
+|log()|矩阵求对数|
+|max()/min()|两个矩阵计算最大值/最小值|
+
+## 图像读取、显示和保存
+
+### 图像加载
+
+```cpp
+Mat cv::imread( const String & filenmae, int flags = IMREAD_COLOR )
+```
+filename：需要读取图像的文件名称的字符串，包含图像地址、名称和图像文件扩展名。<br />
+flags：读取图像形式的标志。以哪种颜色方式读取。<br />
+
+### 图像显示
+
+```cpp
+void cv::namedWindow(const String & winname, int flags = WINDOW_AUTOSIZE)
+```
+
+winname，窗口名称<br />
+flags，窗口属性设置标志<br />
+命名一个窗口，可以自适应显示图片。但是有些版本的Opencv无法自动释放窗口内存，使用namedWindow创建的窗口需要用destroyWindow函数释放。但是使用imshow可以自动创建窗口并释放，不过这样就无法自适应显示，可能原本的图片很大，显示出来后在屏幕上只有一小部分。
+
+```cpp
+void cv::imshow(const String & winname, inputArray mat)
+```
+winname，要显示图像窗口的名字<br />
+mat，要显示的图像矩阵<br />
+
+### 图像保存
+
+```cpp
+bool cv::imwrite(const String & filenmae, inputArray img, const std::vector<int> & params = std::vector<int>())
+```
+
+filename，保存图像的地址和文件名，需要包含文件格式。<br />
+img，将要保存的Mat类矩阵变量。<br />
+params，保存图片个数属性设置标志<br />
+
+该函数可以保存图片，也可以将已有的矩阵数据以图片形式保存下来。
