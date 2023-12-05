@@ -140,85 +140,93 @@ app.UseAuthorization();
 
 ## 日志框架
 
-使用Serilog记录应用运行过程中的日志。在项目中安装以下nuget包：</br>
-Serilog</br>
-Serilog.AspNetCore</br>
-Serilog.Extensions.Logging</br>
-Serilog.Settiings.Configuration</br>
-Serilog.Sinks.Async</br>
-Serilog.Sinks.Console</br>
-Serilog.Sinks.File</br>
+使用Serilog可以实现将asp.net的信息输出到不同的地方，如控制台、文件等。
 
-![](./assets/2022-07-25-11-42-02.png)
+### Nuget程序包
 
-修改项目的appsettings.json
+需要安装Serilog.AspNetCore、Serilog.Sinks.Console这两个Nuget程序包
 
-![](./assets/2022-07-25-12-44-15.png)
+![](./assets/2023-12-05-22-47-52.png)
+
+### appsettings.json
+
+修改appsettings.json内容，配置日志输出到文件
 
 ```json
 {
-  "Logging": {
-    "LogLevel": {
-      "Default": "Information",
-      "Microsoft.AspNetCore": "Warning"
-    }
-  },
-  "AllowedHosts": "*",
-  //serilog  begin
   "Serilog": {
     "MinimumLevel": {
-      "Default": "Debug", //最小日志记录级别
-      "Override": { //系统日志最小记录级别
-        "Default": "Warning",
-        "System": "Warning",
-        "Microsoft": "Warning"
+      "Default": "Information",
+      "Override": {
+        "Microsoft": "Warning",
+        "Microsoft.Hosting.Lifetime": "Information"
       }
     },
-    "WriteTo": [
-      { "Name": "Console" }, //输出到控制台
-      {
-        "Name": "Async", //Serilog.Sinks.Async
+    "WriteTo": {
+      // "Console": {
+      //   "Name": "Console"
+      /// },
+      "File": {
+        "Name": "File",
         "Args": {
-          "configure": [
-            {
-              "Name": "File", //输出文件
-              "Args": {
-                "path": "log/log.txt",
-                "outputTemplate": "{NewLine}Date:{Timestamp:yyyy-MM-dd HH:mm:ss.fff} Exception:{Exception}{NewLine}[{Level}]: {Message}",
-                "rollingInterval": "3" //按天记录
-              }
-            }
-          ]
+          "path": "./logfile/log-.txt",
+          "rollingInterval": "Day"
         }
       }
-    ]
-  }
-  //serilog  end
+    }
+  },
+  "AllowedHosts": "*"
 }
 ```
 
-在Program.cs中添加如下代码，注册Serilog服务
+### Program.cs
+
+在Program.cs中配置使用Serilog
 
 ```csharp
-using Serilog;
-
-#region Serilog
-builder.Host.UseSerilog((context, logger) =>
-{
-    logger.ReadFrom.Configuration(context.Configuration);
-    logger.Enrich.FromLogContext();
-});
-#endregion
+var builder = WebApplication.CreateBuilder(args);
+// Configure Serilog
+Log.Logger = new LoggerConfiguration()
+    .ReadFrom.Configuration(builder.Configuration)
+    .Enrich.FromLogContext()
+    .WriteTo.Console()
+    .WriteTo.File("logfile/log-.txt", rollingInterval: RollingInterval.Day)
+    .CreateLogger();
+builder.Host.UseSerilog();
 ```
 
-在控制器中注册Serilog
+### 注册
+
+在控制器中注入Serilog
 
 ```csharp
-// ContrrlloerName是当前的控制器名称
-private readonly ILogger<ControllerName> _logger;
-public ControllerName(ILogger<ControllerName> logger)
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
+
+namespace SchoolVisionNet.Controllers
 {
-    _logger = logger;
+    [Route("api/[controller]/[action]")]
+    [ApiController]
+    public class TestController : ControllerBase
+    {
+        private readonly ILogger<TestController> _logger;
+
+        public TestController(ILogger<TestController> logger)
+        {
+            _logger = logger;
+        }
+
+        /// <summary>
+        /// 日志输出测试
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet]
+        public ActionResult LoggerTest()
+        {
+            _logger.LogInformation("LogInformation " + DateTime.Now.ToString());
+            return Ok();
+        }
+    }
 }
 ```
 
@@ -244,6 +252,8 @@ public ControllerName(ILogger<ControllerName> logger)
 Scaffold-DbContext "server=[服务器地址];userid=[用户名];pwd=[用户密码];port=[数据库端口(3306)];database=[数据库名];sslmode=none;" Pomelo.EntityFrameworkCore.MySql -OutputDir Models -Force
 
 Scaffold-DbContext "server=192.168.51.250;userid=qhctec;pwd=qhctec@2023;port=3306;database=qhctec;sslmode=none;" Pomelo.EntityFrameworkCore.MySql -OutputDir Models -Force
+
+Scaffold-DbContext "server=10.80.65.201;userid=qhctec;pwd=qhctec#1q2w3e;port=3306;database=qhctec;sslmode=none;" Pomelo.EntityFrameworkCore.MySql -OutputDir Models -Force
 ```
 
 ![](./assets/2022-06-27-09-24-28.png)
