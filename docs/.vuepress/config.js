@@ -116,13 +116,13 @@ module.exports = {
         ]
       },
       {
-        title: "数据库系统开发",
-        path: "/db_demo/",
+        title: "vue+.net前后端分离",
+        path: "/DbSystem/",
         collapsable: true,
         children: [
-          ["/db_demo/database", "数据库配置"],
-          ["/db_demo/dotnetcore", "Asp.net core 项目开发"],
-          ["/db_demo/vue", "前端开发"]
+          ["/DbSystem/vue", "VUE"],
+          ["/DbSystem/dotnetcore", "Asp.net core"],
+          ["/DbSystem/database", "数据库"]
         ]
       },
       {
