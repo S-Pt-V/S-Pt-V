@@ -20,25 +20,53 @@
 
 ## 跨域配置
 
-在Program.cs中添加如下代码
+跨域问题（Cross-Origin Resource Sharing，简称CORS）是由浏览器的同源策略（Same-Origin Policy）引起的。同源策略是一种安全机制，限制了一个网页从不用源加在的资源与当前页面进行交互。**同源是指两个页面的协议、域名和端口号都相同**。
+
+当一个网页尝试从不用的域名、端口或协议加载资源时，浏览器会根据同源策略阻止这种跨域资源访问。例如，如果一个网页在域名A上加在的JavaScript代码试图向域名B发送Ajax请求，浏览器会阻止这个跨域请求。
+
+跨域问题的产生时因为现代Web应用程序通常采用前后端分离架构，前端代码通常运行在浏览器中，而后端代码则运行在不同的服务器上。为了保护用户数据安全和防止恶意攻击，浏览器引入了同源策略，限制了跨域资源的访问。
+
+跨域问题可以通过跨域资源共享（CORS）机制来解决。CORS时一种机制，允许服务器在响应中添加一些特定的HTTP头部，告诉浏览器允许跨域访问资源。通过在服务器端配置响应头，可以允许特定的域名或所有域名跨域访问资源。
+
+通常情况下，服务器端需要设置以下HTTP头部来启用CORS：
+1. Access-Control-Allow-Origin：指定允许访问资源的域名，可以是具体的域名或通配符表示允许所有域名访问
+2. Access-Control-Allow-Methods：指定允许的HTTP请求方法，如GET、POST等
+3. Access-Control-Allow-Headers：指定允许的自定义HTTP请求头部
+4. Access-Control-Allow-Credentials：指定是否允许发送凭据，如Cookie，HTTP认证
+
+通过设置这些HTTP头部，服务器可以告知浏览器允许跨域访问资源，从而解决跨域问题。
+
+::: tip
+CORS是一种浏览器机制，对于其他非浏览器环境，如服务器之间的请求，不受同源策略的限制。
+:::
 
 ```csharp
-builder.Services.AddCors(options =>
-{
-    options.AddPolicy(
-            name: "Cors",
-            build =>
-            {
-                build.WithOrigins("*", "*", "*")
-                .AllowAnyOrigin()
-                .AllowAnyHeader()
-                .AllowAnyMethod();
-            }
-        );
-});
+// 配置跨域策略
+builder.Services.AddCors(options => {
+    options.AddPolicy("CorsPolicy", opt => opt.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod());
+})
 
-app.UseCors("Cors");
+// builder.Services.AddCors(options =>
+// {
+//     options.AddPolicy(
+//             name: "Cors",
+//             build =>
+//             {
+//                 build.WithOrigins("*", "*", "*")
+//                 .AllowAnyOrigin()
+//                 .AllowAnyHeader()
+//                 .AllowAnyMethod();
+//             }
+//         );
+// });
+
+// 使用跨域策略
+app.UseCors("CorsPolicy");
 ```
+
+::: warning
+发生跨域时，请求是经过了后端的。只是后端返回数据以后，被浏览器拦截了，不给客户端。
+:::
 
 ## Token认证
 
@@ -60,79 +88,49 @@ app.UseCors("Cors");
 }
 ```
 
-Jwt的三部分：</br>
-&ensp;&ensp;&ensp;&ensp;标头：</br>
-&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;包含令牌的类型和使用的签名算法
-&ensp;&ensp;&ensp;&ensp;有效载荷：</br>
-&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;存放用户信息，如用户id，权限等，但不存放敏感信息，如密码等（可以被破解）
-&ensp;&ensp;&ensp;&ensp;签名：</br>
-&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;使用编码后的header和payload
+Jwt的三部分：
+1. 标头：包含令牌的类型和使用的签名算法
+2. 有效载荷：存放用户信息，如用户id，权限等，但不存放敏感信息，如密码等（可以被破解）
+3. 签名：使用编码后的header和payload
 
-Jwt在登录成功后生成：
+Jwt在登录成功后生成。生成Token的部分代码如下：
 
 ```csharp
-private readonly IConfiguration _configuration;
-public AccountController(IConfiguration configuration)
+public static string generateJwtToken(string name, string role, Guid uid, DateTime expiretime, string key)
 {
-    _configuration = configuration;
-}
-
-[HttpPost]
-public ActionResult Login()
-{
-    //登录认证策略省略
-    // Header的签名算法
-    var signingAlgorithm = SecurityAlgorithms.HmacSha256;
-    // payload存放用户信息, "user_id"处为存放的用户信息
-    var claim = new[]
+    var tokenHandler = new JwtSecurityTokenHandler();
+    var bytekey = Encoding.ASCII.GetBytes(key);
+    var tokenDescriptor = new SecurityTokenDescriptor
     {
-        new Claim(JwtRegisteredClaimNames.Sub, "user_id")
+        Subject = new ClaimsIdentity(new Claim[]
+        {
+            new Claim(ClaimTypes.Name, name),
+            new Claim(ClaimTypes.Role, role),
+            new Claim(ClaimTypes.NameIdentifier, uid.ToString()),
+            new Claim(ClaimTypes.Expiration, expiretime.ToString())
+        }),
+        Expires = DateTime.Now.AddDays(1),
+        SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(bytekey), SecurityAlgorithms.HmacSha256Signature)
     };
-    // Signature
-    // 取出私钥的UTF8二进制编码
-    var key_byte = Encoding.UTF8.GetBytes(_configuration["Authentication:key"]);
-    // 使用非对称算法加密
-    var signingKey = new SymmetricSecurityKey(key_byte);
-    // 使用HmacSha256验证加密后的私钥生成数字签名
-    var signingCredentials = new SigningCredentials(signingKey, signingAlgorithm);
-    // 生成Token
-    var token = new JwtSecurityToken(
-        issuer: _configuration["Authentication:issuer"],
-        audience: _configuration["Authentication:audience"],
-        claims: claim,
-        notBefore: DateTime.UtcNow,
-        expires: DateTime.UtcNow.AddDays(1),
-        signingCredentials
-        );
-    var Token = new JwtSecurityTokenHandler().WriteToken(token);
-    return Ok(Token);
+    var token = tokenHandler.CreateToken(tokenDescriptor);
+    return tokenHandler.WriteToken(token);
 }
 ```
 
-取出用户信息：
+取出token中存放的信息：
 
 ```csharp
-// "user_id"为键名
-var id = HttpContext.User.Claims.First(c => c.Type == "user_id");
+Username = User.Claims.GetUserName();
+AccountGuid = User.Claims.GetAccountUid();
+Role = User.Claims.GetRole();
+Expire = User.Claims.GetExpire();
 ```
 
 在Program.cs注入Jwt认证服务
 
 ```csharp
-builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-    .AddJwtBearer(options =>
-    {
-        var secretKey = Encoding.UTF8.GetBytes(builder.Configuration["Authentication:key"]);
-        options.TokenValidationParameters = new TokenValidationParameters()
-        {
-            ValidateIssuer = true,
-            ValidIssuer = builder.Configuration["Authentication:issuer"],
-            ValidateAudience = true,
-            ValidAudience = builder.Configuration["Authentication:audience"],
-            ValidateLifetime = true,
-            IssuerSigningKey = new SymmetricSecurityKey(secretKey)
-        };
-    });
+builder.Services.UseJwt("[Token中使用的Key]");
+
 // 还需要配置这两个中间件
 app.UseAuthentication();
 app.UseAuthorization();
@@ -409,6 +407,8 @@ namespace qhctec.Models
 }
 
 ```
+
+上述文件生成后，可以看到其中的OnConfiguring函数，其中连接数据库用的连接字符串是明文写在代码文件中的，可以将其写进appsettings.json中隐藏。
 
 之后需要在Program.cs中注册数据库上下文：
 
