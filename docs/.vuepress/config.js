@@ -45,6 +45,14 @@ module.exports = {
         ]
       },
       {
+        title: "Linux",
+        path: "/linux",
+        collapsable: true,
+        children: [
+          ["/linux/expand", "Linux虚拟机硬盘扩容"]
+        ]
+      },
+      {
         title: "Oracle",
         path: "/oracle/",
         collapsable: true,

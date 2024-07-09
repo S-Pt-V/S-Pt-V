@@ -321,3 +321,67 @@ export default ({
 })
 </script>
 ```
+
+## 地图
+
+### Leaflet
+
+Leaflet 是一个开源的 JavaScript 库，用于创建交互式的地图应用程序。它提供了一系列简单易用的 API，可以帮助开发者在网页上嵌入地图，并添加各种交互和图层，如标记、多边形、折线、热点、地图图层等。
+
+#### 安装
+
+安装leafelet
+```sh
+npm install leaflet
+```
+
+#### 引入
+
+```js
+import L from 'leaflet';\
+import 'leaflet/dist/leaflet.css';
+```
+
+#### 添加地图容器
+
+```html
+<template>
+  <div id="map"></div>
+</template>
+
+<style>
+#map {
+    width: 100%;
+    height: 100vh;
+}
+</style>
+```
+
+#### 初始化地图
+
+```js
+<script>
+import L from "leaflet";
+import "leaflet/dist/leaflet.css";
+
+export default {
+    name: "Map",
+    mounted() {
+        // 创建地图
+        // const map = L.map('map').setView([0, 0], 3); // 将地图设置为整个世界，缩放级别为2
+        const map = L.map('map').setView([36.6171, 101.7782], 14);
+        
+        // 使用CartoDB的Dark Matter地图图块
+        L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
+            // attribution: 'Map tiles by CartoDB, under CC BY 3.0. Data by OpenStreetMap, under ODbL.',
+            maxZoom: 19
+        }).addTo(map);
+
+        // 当地图加载完毕后，手动触发地图大小重新计算
+        this.map.on('load', () => {
+            this.map.invalidateSize();
+        })
+    }
+};
+</script>
+```
