@@ -33,6 +33,12 @@ module.exports = {
         ]
       },
       {
+        title: "安全",
+        path: "/Security/",
+        collapsable: true,
+        children: []
+      },
+      {
         title: "虚拟化",
         path: "/virtualize/",
         collapsable: true,
@@ -115,12 +121,12 @@ module.exports = {
         path: "/cv&dl/",
         collapsable: true,
         children: [
-          ["/cv&dl/imagclassify", "图像分类"],
-          ["/cv&dl/linear", "线性分类器"],
-          ["/cv&dl/FC", "全连接神经网络"],
-          ["/cv&dl/CNN", "卷积神经网络"],
-          ["/cv&dl/classic", "经典网络分析"],
-          ["/cv&dl/segmentation", "图像分割"]
+          // ["/cv&dl/imagclassify", "图像分类"],
+          // ["/cv&dl/linear", "线性分类器"],
+          // ["/cv&dl/FC", "全连接神经网络"],
+          // ["/cv&dl/CNN", "卷积神经网络"],
+          // ["/cv&dl/classic", "经典网络分析"],
+          // ["/cv&dl/segmentation", "图像分割"]
         ]
       },
       {
@@ -141,6 +147,12 @@ module.exports = {
           ["/vue/environment", "环境配置"],
           ["/vue/project", "项目创建"],
         ]
+      },
+      {
+        title: "Dotnet",
+        path: "/dotnet/",
+        collapsable: true,
+        children: []
       },
       {
         title: "Python",
