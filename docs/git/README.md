@@ -120,6 +120,12 @@ git commit
 
 ![](./assets/2024-12-04-11-27-04.png)
 
+可以使用通配符的方式添加文件，例如
+```sh
+git add *
+git add *.txt
+```
+
 ### git commit
 
 使用git commit可以将暂存区的文件添加到仓库中。文件被提交到仓库中后才算被保管起来。该命令只会提交暂存区中的文件，而不会提交工作区中的其他文件。
@@ -129,4 +135,7 @@ git commit 在使用时需要添加-m参数，填写提交信息。如果不使�
 ```sh
 git commit -m "initial commit"
 ```
+
+![](./assets/2024-12-04-11-32-51.png)
+
 
