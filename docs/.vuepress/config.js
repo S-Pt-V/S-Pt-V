@@ -15,6 +15,10 @@ module.exports = {
     sidebar: [
       ["/", "主页"],
       {
+        title: "Git",
+        path: "/git/"
+      },
+      {
         title: "实验室记录",
         path: "/lab/",
         collapsable: true,
