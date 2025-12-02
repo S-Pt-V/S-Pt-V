@@ -1,7 +1,3 @@
-# 介绍
-
-这是我的学习文档
-
 # 问题
 
 ## node版本过高
@@ -19,3 +15,4 @@ error:03000086:digital envelope routines::initialization error
 ```shell
 $env:NODE_OPTIONS="--openssl-legacy-provider"
 ```
+
